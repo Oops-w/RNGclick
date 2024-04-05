@@ -8,6 +8,7 @@ color_mode = False
 rng_istimed = False
 rng_limit = (1, 100)
 refresh_time = 10000 
+after_id = 0
 
 def main():
     root = Tk()
@@ -71,11 +72,13 @@ def create_window():
     gen_rand(window, label)
     
 def gen_rand(root, label):
-    global rng_istimed, color_mode, rng_limit, refresh_time
+    global rng_istimed, color_mode, rng_limit, refresh_time, after_id
     COLORS = ('#FF3333','#FFAC33','#FFFF33','#33FF39','#33FF39','#FFFF33','#FFAC33','#FF3333')
     label['text'] = SystemRandom().randint(rng_limit[0], rng_limit[1])
     label.config(fg=COLORS[(label['text'] + 100*int(color_mode) - rng_limit[0]) // 25])
-    root.after(refresh_time, lambda: gen_rand(root, label))  # 使用 refresh_time 参数来设置自动刷新时间间隔
+    if after_id != 0:
+        root.after_cancel(after_id)
+    after_id = root.after(refresh_time, lambda: gen_rand(root, label))  # 使用 refresh_time 参数来设置自动刷新时间间隔
 
 def clear_rand(label):
     label['text'] = ""
